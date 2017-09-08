@@ -9,6 +9,10 @@ LABEL                   license="See: LICENSE.txt for complete licensing informa
 LABEL                   support="caldav AT cime.net"
 LABEL                   version="2.1"
 
+ENV                     DEBIAN_FRONTEND noninteractive
+
+RUN                     apt-get update -y && \
+                        apt-get install -y --no-install-recommends locales
 
 ### "set-locale"
 RUN                     locale-gen en_US.UTF-8 && \
@@ -40,19 +44,9 @@ RUN                     echo "postfix postfix/mailname string calendar.example.o
 
 
 ### "system-requirements"
-RUN                     apt-get install apache2
-RUN                     apt-get install curl
-RUN                     apt-get install postfix 
-RUN                     apt-get install mailutils
-RUN                     apt-get install rsyslog
-RUN                     apt-get install sqlite3
-RUN                     apt-get install php
-RUN                     apt-get install libapache2-mod-php
-RUN                     apt-get install php-date
-RUN                     apt-get install php-dom
-RUN                     apt-get install php-mbstring
-RUN                     apt-get install php-sqlite3
-RUN                     apt-get install unzip
+RUN                     apt-get install -y apache2 curl postfix mailutils rsyslog sqlite3 \
+                                           php libapache2-mod-php php-date php-dom \
+                                           php-mbstring php-sqlite3 unzip
 
 
 ### "Baikal-installation"
@@ -99,4 +93,3 @@ RUN                     awk '/vim: syntax/ { printf("# Poxy; CVE-2016-5387\nLoad
 RUN                     cat /tmp/apache2.conf > /etc/apache2/apache2.conf && rm /tmp/apache2.conf
 
 ENTRYPOINT                [ "/runapache2" ]
-
